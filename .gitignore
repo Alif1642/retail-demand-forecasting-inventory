@@ -1,0 +1,39 @@
+.env
+
+.venv/
+venv/
+
+__pycache__/
+*.py[cod]
+
+.ipynb_checkpoints/
+
+# M5 dataset
+data/raw/m5/*.csv
+
+# Generated data
+data/processed/*
+!data/processed/.gitkeep
+
+data/features/*
+!data/features/.gitkeep
+
+data/predictions/*
+!data/predictions/.gitkeep
+
+# Models
+models/*
+!models/.gitkeep
+
+# Results
+results/metrics/*
+!results/metrics/.gitkeep
+
+results/figures/*
+!results/figures/.gitkeep
+
+results/reports/*
+!results/reports/.gitkeep
+
+# Experiment outputs
+mlruns/

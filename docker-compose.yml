@@ -1,0 +1,30 @@
+services:
+  api:
+    build: .
+    command: hypercorn api.main:app --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      DATA_MODE: sample
+      MAX_SERIES: 100
+    volumes:
+      - ./data/raw/m5:/app/data/raw/m5:ro
+      - ./data/processed:/app/data/processed
+      - ./data/predictions:/app/data/predictions
+      - ./models:/app/models
+      - ./results:/app/results
+
+  dashboard:
+    build: .
+    command: streamlit run dashboard/streamlit_app.py --server.address 0.0.0.0 --server.port 8501
+    ports:
+      - "8501:8501"
+    environment:
+      DATA_MODE: sample
+      MAX_SERIES: 100
+    volumes:
+      - ./data/raw/m5:/app/data/raw/m5:ro
+      - ./data/processed:/app/data/processed
+      - ./data/predictions:/app/data/predictions
+      - ./models:/app/models
+      - ./results:/app/results
