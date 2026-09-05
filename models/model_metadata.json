@@ -1,0 +1,9 @@
+{
+  "model": "LightGBM",
+  "forecast_horizon": 28,
+  "prediction_interval": 0.9,
+  "training_rows": 191300,
+  "validation_rows": 2800,
+  "validation_start": "2016-04-25",
+  "validation_end": "2016-05-22"
+}
