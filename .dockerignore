@@ -11,6 +11,7 @@ data/raw/m5/*.csv
 
 data/processed/*
 !data/processed/.gitkeep
+!data/processed/m5_prepared.csv
 
 data/features/*
 !data/features/.gitkeep
@@ -20,9 +21,16 @@ data/predictions/*
 
 models/*
 !models/.gitkeep
+!models/lightgbm_model.txt
+!models/feature_columns.json
+!models/model_metadata.json
 
 results/metrics/*
 !results/metrics/.gitkeep
+!results/metrics/validation_metrics.json
+!results/metrics/validation_residuals.csv
+!results/metrics/backtest_results.csv
+!results/metrics/backtest_summary.json
 
 results/figures/*
 !results/figures/.gitkeep
