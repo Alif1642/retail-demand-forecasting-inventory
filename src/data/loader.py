@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pathlib import Path
 from typing import Iterable
@@ -79,21 +79,62 @@ def load_prices(
 ) -> pd.DataFrame:
     raw_dir = Path(raw_dir or settings.raw_m5_dir)
     data_mode = (data_mode or settings.data_mode).lower()
-    path = _require_file(raw_dir / "sell_prices.csv")
 
-    if data_mode == "sample" and series_keys is not None:
-        valid_pairs = set(
-            series_keys["store_id"].astype(str).str.cat(series_keys["item_id"].astype(str), sep="::")
-        )
-        chunks = []
-        for chunk in pd.read_csv(path, chunksize=500_000):
-            pair_key = chunk["store_id"].astype(str).str.cat(chunk["item_id"].astype(str), sep="::")
-            filtered = chunk.loc[pair_key.isin(valid_pairs)]
-            if not filtered.empty:
-                chunks.append(filtered)
-        frame = pd.concat(chunks, ignore_index=True) if chunks else pd.DataFrame(columns=["store_id", "item_id", "wm_yr_wk", "sell_price"])
+    full_path = raw_dir / "sell_prices.csv"
+    sample_path = raw_dir / "sell_prices_sample.csv"
+
+    # In sample/deployment mode, use the lightweight pre-filtered file.
+    if data_mode == "sample" and sample_path.exists():
+        frame = pd.read_csv(sample_path)
+
+        if series_keys is not None:
+            valid_pairs = set(
+                series_keys["store_id"]
+                .astype(str)
+                .str.cat(series_keys["item_id"].astype(str), sep="::")
+            )
+
+            pair_key = (
+                frame["store_id"]
+                .astype(str)
+                .str.cat(frame["item_id"].astype(str), sep="::")
+            )
+
+            frame = frame.loc[pair_key.isin(valid_pairs)].copy()
+
     else:
-        frame = pd.read_csv(path)
+        path = _require_file(full_path)
+
+        if data_mode == "sample" and series_keys is not None:
+            valid_pairs = set(
+                series_keys["store_id"]
+                .astype(str)
+                .str.cat(series_keys["item_id"].astype(str), sep="::")
+            )
+
+            chunks = []
+
+            for chunk in pd.read_csv(path, chunksize=500_000):
+                pair_key = (
+                    chunk["store_id"]
+                    .astype(str)
+                    .str.cat(chunk["item_id"].astype(str), sep="::")
+                )
+
+                filtered = chunk.loc[pair_key.isin(valid_pairs)]
+
+                if not filtered.empty:
+                    chunks.append(filtered)
+
+            frame = (
+                pd.concat(chunks, ignore_index=True)
+                if chunks
+                else pd.DataFrame(
+                    columns=["store_id", "item_id", "wm_yr_wk", "sell_price"]
+                )
+            )
+        else:
+            frame = pd.read_csv(path)
 
     frame = _as_categories(frame, ["store_id", "item_id"])
     return _downcast_numeric(frame)
@@ -115,3 +156,4 @@ def load_m5_data(
 def check_expected_files(raw_dir: Path | None = None) -> dict[str, bool]:
     raw_dir = Path(raw_dir or settings.raw_m5_dir)
     return {name: (raw_dir / name).exists() for name in REQUIRED_M5_FILES}
+

@@ -9,6 +9,7 @@ __pycache__
 
 data/raw/m5/*.csv
 !data/raw/m5/calendar.csv
+!data/raw/m5/sell_prices_sample.csv
 
 data/features/*
 data/predictions/*
