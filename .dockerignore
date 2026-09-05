@@ -8,6 +8,7 @@ __pycache__
 .ipynb_checkpoints
 
 data/raw/m5/*.csv
+!data/raw/m5/calendar.csv
 
 data/features/*
 data/predictions/*
