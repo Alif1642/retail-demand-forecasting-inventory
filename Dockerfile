@@ -14,6 +14,7 @@ COPY src ./src
 COPY api ./api
 COPY dashboard ./dashboard
 COPY scripts ./scripts
+COPY demo ./demo
 COPY data ./data
 COPY results ./results
 COPY models ./models
