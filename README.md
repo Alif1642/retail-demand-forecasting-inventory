@@ -1,4 +1,4 @@
-# Retail Demand Forecasting & Inventory Decision Engine
+# Retail Demand Forecasting & Inventory Decision Enginei
 
 <p align="center">
   <strong>End-to-end retail demand forecasting that turns predictions into inventory decisions.</strong>
